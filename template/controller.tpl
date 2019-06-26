@@ -74,9 +74,8 @@ class {{.tableName}} extends BaseController
      *
      * @return void
      */
-    public function info() 
+    public function info($id) 
     {
-        $id = input('get.id');
         if(empty($id)) {
             return $this->wrongReturn('参数错误');
         }
