@@ -75,11 +75,11 @@ func main() {
 	//解析配置文件
 	err = yaml.Unmarshal([]byte(data), &conf)
 	if err != nil {
-		fmt.Println("解析配置文件失败")
+		fmt.Println("解析配置文件失败", err)
 		return
 	}
 
-	conf.GenPath = conf.Path + conf.AppName + "/" + conf.Module
+	conf.GenPath = conf.Path + "/" + conf.AppName + "/" + conf.Module
 	fmt.Println(conf)
 
 	tableName := cameCase(*table)
@@ -124,7 +124,7 @@ func paseModel(tableName string, cfg Conf, tplName string) {
 func writeFile(path string, content []byte) {
 	file, err := os.Create(path)
 	if err != nil {
-		fmt.Println("文件创建失败")
+		fmt.Println("文件创建失败", err)
 		return
 	}
 	defer file.Close()
