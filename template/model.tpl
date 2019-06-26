@@ -1,5 +1,5 @@
 <?php
-namespace app\api\models;
+namespace app\{{.module}}\models;
 
 class {{.tableName}} extends BaseModel
 {

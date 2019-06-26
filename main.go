@@ -41,6 +41,7 @@ func main() {
 	origin := flag.String("o", "", "表的来源")
 
 	flag.Parse()
+
 	for _, value := range *genParam {
 		genFlag := string(value)
 		switch genFlag {
@@ -68,10 +69,6 @@ func main() {
 		return
 	}
 
-	if *module != "" {
-		conf.Module = *module
-	}
-
 	//解析配置文件
 	err = yaml.Unmarshal([]byte(data), &conf)
 	if err != nil {
@@ -79,8 +76,11 @@ func main() {
 		return
 	}
 
+	if *module != "" {
+		conf.Module = *module
+	}
+
 	conf.GenPath = conf.Path + "/" + conf.AppName + "/" + conf.Module
-	fmt.Println(conf)
 
 	tableName := cameCase(*table)
 	fmt.Println("name:", *genParam)
@@ -96,17 +96,25 @@ func main() {
 	parseServices(tableName, conf)
 	// 解析controller
 	parseController(tableName, conf)
+	//解析 validate
+	parseValidate(tableName, conf)
 }
 
+func parseValidate(tableName string, cfg Conf) {
+	tplContent := parseTpl("validate.tpl", map[string]interface{}{"tableName": tableName, "genCondition": cfg.CDATA, "module": cfg.Module})
+
+	mPath := cfg.GenPath + "/validates/" + tableName + ".php"
+	writeFile(mPath, tplContent)
+}
 func parseController(tableName string, cfg Conf) {
-	tplContent := parseTpl("controller.tpl", map[string]interface{}{"tableName": tableName, "genCondition": cfg.CDATA})
+	tplContent := parseTpl("controller.tpl", map[string]interface{}{"tableName": tableName, "genCondition": cfg.CDATA, "module": cfg.Module})
 
 	mPath := cfg.GenPath + "/controllers/" + tableName + ".php"
 	writeFile(mPath, tplContent)
 }
 
 func parseServices(tableName string, cfg Conf) {
-	tplContent := parseTpl("service.tpl", map[string]interface{}{"tableName": tableName})
+	tplContent := parseTpl("service.tpl", map[string]interface{}{"tableName": tableName, "module": cfg.Module})
 
 	mPath := cfg.GenPath + "/services/" + tableName + "Service.php"
 	writeFile(mPath, tplContent)
@@ -114,7 +122,7 @@ func parseServices(tableName string, cfg Conf) {
 
 // paseModel 解析模型
 func paseModel(tableName string, cfg Conf, tplName string) {
-	tplContent := parseTpl(tplName, map[string]interface{}{"tableName": tableName})
+	tplContent := parseTpl(tplName, map[string]interface{}{"tableName": tableName, "module": cfg.Module})
 
 	mPath := cfg.GenPath + "/models/" + tableName + ".php"
 	writeFile(mPath, tplContent)

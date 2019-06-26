@@ -1,8 +1,8 @@
 <?php
-namespace app\api\controllers;
+namespace app\{{.module}}\controllers;
 
-use app\api\services\{{.tableName}}Service as Service;
-use app\api\validates\{{.tableName}}Validate as Validate;
+use app\{{.module}}\services\{{.tableName}}Service as Service;
+use app\{{.module}}\validates\{{.tableName}}Validate as Validate;
 
 class {{.tableName}} extends BaseController
 {

@@ -1,7 +1,7 @@
 <?php
-namespace app\api\services;
+namespace app\{{.module}}\services;
 
-use app\api\models\{{.tableName}};
+use app\{{.module}}\models\{{.tableName}};
 
 class {{.tableName}}Service extends BaseService
 {
