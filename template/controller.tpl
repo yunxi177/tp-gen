@@ -3,6 +3,8 @@ namespace app\{{.module}}\controllers;
 
 use app\{{.module}}\services\{{.tableName}}Service as Service;
 use app\{{.module}}\validates\{{.tableName}}Validate as Validate;
+use app\exceptions\BaseException;
+use app\enum\ErrorCodeEnum;
 
 class {{.tableName}} extends BaseController
 {
@@ -18,7 +20,7 @@ class {{.tableName}} extends BaseController
         $validate = new Validate();
         $validate->scene('add');
         if(! $validate->check($data)) {
-            return $this->wrongReturn($validate->getError());
+            throw new BaseException(['msg' => $validate->getError(),'errCode' => ErrorCodeEnum::DEFAULT]);
         }
         
         (new Service)->add($data);
@@ -47,9 +49,12 @@ class {{.tableName}} extends BaseController
      */
     public function update() 
     {
-        $id = input('get.id');
+       $id = input('get.id');
+        if (empty($id)) {
+            throw new BaseException(['msg' => '参数错误', 'errCode' => ErrorCodeEnum::DEFAULT]);
+        }
         $data = input('put.');
-    
+        
         (new Service)->update([['id', '=', $id]], $data);
         return $this->okReturn([]);
     }{{- end}}
@@ -77,7 +82,7 @@ class {{.tableName}} extends BaseController
     public function info($id) 
     {
         if(empty($id)) {
-            return $this->wrongReturn('参数错误');
+            throw new BaseException(['msg' => '参数错误', 'errCode' => ErrorCodeEnum::DEFAULT]);
         }
 
         $info = (new Service)->one([['id', '=', $id]], ['*']);
