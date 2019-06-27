@@ -105,7 +105,7 @@ func main() {
 func parseValidate(fileName string, cfg Conf) {
 	tplContent := parseTpl("validate.tpl", map[string]interface{}{"fileName": fileName, "genCondition": cfg.CDATA, "module": cfg.Module})
 
-	mPath := cfg.GenPath + "/validates/" + fileName + ".php"
+	mPath := cfg.GenPath + "/validates/" + fileName + "Validate.php"
 	writeFile(mPath, tplContent)
 }
 func parseController(fileName string, cfg Conf) {
