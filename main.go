@@ -82,49 +82,51 @@ func main() {
 
 	conf.GenPath = conf.Path + "/" + conf.AppName + "/" + conf.Module
 
-	tableName := cameCase(*table)
+	fileName := cameCase(*table)
 	fmt.Println("name:", *genParam)
-	fmt.Println("table:", tableName)
+	fmt.Println("table:", fileName)
 	// 解析模型
+	modelName := fileName
 	if *origin == "dt" {
-		paseModel(tableName, conf, "DtModel.tpl")
+		modelName = "DT" + fileName
+		paseModel("DT"+fileName, conf, "DtModel.tpl", *table)
 	} else {
-		paseModel(tableName, conf, "model.tpl")
+		paseModel(fileName, conf, "model.tpl", *table)
 	}
 
 	// 解析service
-	parseServices(tableName, conf)
+	parseServices(fileName, conf, modelName)
 	// 解析controller
-	parseController(tableName, conf)
+	parseController(fileName, conf)
 	//解析 validate
-	parseValidate(tableName, conf)
+	parseValidate(fileName, conf)
 }
 
-func parseValidate(tableName string, cfg Conf) {
-	tplContent := parseTpl("validate.tpl", map[string]interface{}{"tableName": tableName, "genCondition": cfg.CDATA, "module": cfg.Module})
+func parseValidate(fileName string, cfg Conf) {
+	tplContent := parseTpl("validate.tpl", map[string]interface{}{"fileName": fileName, "genCondition": cfg.CDATA, "module": cfg.Module})
 
-	mPath := cfg.GenPath + "/validates/" + tableName + ".php"
+	mPath := cfg.GenPath + "/validates/" + fileName + ".php"
 	writeFile(mPath, tplContent)
 }
-func parseController(tableName string, cfg Conf) {
-	tplContent := parseTpl("controller.tpl", map[string]interface{}{"tableName": tableName, "genCondition": cfg.CDATA, "module": cfg.Module})
+func parseController(fileName string, cfg Conf) {
+	tplContent := parseTpl("controller.tpl", map[string]interface{}{"fileName": fileName, "genCondition": cfg.CDATA, "module": cfg.Module})
 
-	mPath := cfg.GenPath + "/controllers/" + tableName + ".php"
+	mPath := cfg.GenPath + "/controllers/" + fileName + ".php"
 	writeFile(mPath, tplContent)
 }
 
-func parseServices(tableName string, cfg Conf) {
-	tplContent := parseTpl("service.tpl", map[string]interface{}{"tableName": tableName, "module": cfg.Module})
+func parseServices(fileName string, cfg Conf, modelName string) {
+	tplContent := parseTpl("service.tpl", map[string]interface{}{"fileName": fileName, "module": cfg.Module, "modelName": modelName})
 
-	mPath := cfg.GenPath + "/services/" + tableName + "Service.php"
+	mPath := cfg.GenPath + "/services/" + fileName + "Service.php"
 	writeFile(mPath, tplContent)
 }
 
 // paseModel 解析模型
-func paseModel(tableName string, cfg Conf, tplName string) {
-	tplContent := parseTpl(tplName, map[string]interface{}{"tableName": tableName, "module": cfg.Module})
+func paseModel(fileName string, cfg Conf, tplName string, tableName string) {
+	tplContent := parseTpl(tplName, map[string]interface{}{"fileName": fileName, "module": cfg.Module, "tableName": tableName})
 
-	mPath := cfg.GenPath + "/models/" + tableName + ".php"
+	mPath := cfg.GenPath + "/models/" + fileName + ".php"
 	writeFile(mPath, tplContent)
 }
 

@@ -1,7 +1,7 @@
 <?php
 namespace app\{{.module}}\models;
 
-class {{.tableName}} extends BaseModel
+class {{.fileName}} extends BaseModel
 {
     
 }

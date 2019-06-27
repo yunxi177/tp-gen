@@ -1,7 +1,7 @@
 <?php
 namespace app\{{.module}}\validates;
 
-class {{.tableName}}Validate extends BaseValidate
+class {{.fileName}}Validate extends BaseValidate
 {
     protected $rule = [
       

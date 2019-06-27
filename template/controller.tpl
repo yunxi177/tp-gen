@@ -1,12 +1,12 @@
 <?php
 namespace app\{{.module}}\controllers;
 
-use app\{{.module}}\services\{{.tableName}}Service as Service;
-use app\{{.module}}\validates\{{.tableName}}Validate as Validate;
+use app\{{.module}}\services\{{.fileName}}Service as Service;
+use app\{{.module}}\validates\{{.fileName}}Validate as Validate;
 use app\exceptions\BaseException;
 use app\enum\ErrorCodeEnum;
 
-class {{.tableName}} extends BaseController
+class {{.fileName}} extends BaseController
 {
     {{if .genCondition.GenAdd }}
     /**
