@@ -79,6 +79,9 @@ func main() {
 	if *module != "" {
 		conf.Module = *module
 	}
+	if conf.Path == "" {
+		conf.Path = "./"
+	}
 
 	conf.GenPath = conf.Path + "/" + conf.AppName + "/" + conf.Module
 
@@ -87,17 +90,18 @@ func main() {
 	fmt.Println("table:", fileName)
 	// 解析模型
 	modelName := fileName
-	if *origin == "dt" {
-		modelName = "DT" + fileName
-		paseModel("DT"+fileName, conf, "DtModel.tpl", *table)
+	if *origin != "" {
+		*origin = strings.ToUpper(*origin)
+		modelName = *origin + fileName
+		paseModel(modelName, conf, "OriginModel.tpl", *table, *origin)
 	} else {
-		paseModel(fileName, conf, "model.tpl", *table)
+		paseModel(fileName, conf, "model.tpl", *table, *origin)
 	}
 
 	// 解析service
-	parseServices(fileName, conf, modelName)
+	parseServices(fileName, conf, modelName, *origin)
 	// 解析controller
-	parseController(fileName, conf)
+	parseController(fileName, conf, *origin)
 	//解析 validate
 	parseValidate(fileName, conf)
 }
@@ -108,23 +112,27 @@ func parseValidate(fileName string, cfg Conf) {
 	mPath := cfg.GenPath + "/validates/" + fileName + "Validate.php"
 	writeFile(mPath, tplContent)
 }
-func parseController(fileName string, cfg Conf) {
-	tplContent := parseTpl("controller.tpl", map[string]interface{}{"fileName": fileName, "genCondition": cfg.CDATA, "module": cfg.Module})
+func parseController(fileName string, cfg Conf, origin string) {
+	tplContent := parseTpl("controller.tpl", map[string]interface{}{"fileName": fileName, "genCondition": cfg.CDATA, "module": cfg.Module, "origin": origin})
 
 	mPath := cfg.GenPath + "/controllers/" + fileName + ".php"
 	writeFile(mPath, tplContent)
 }
 
-func parseServices(fileName string, cfg Conf, modelName string) {
-	tplContent := parseTpl("service.tpl", map[string]interface{}{"fileName": fileName, "module": cfg.Module, "modelName": modelName})
+func parseServices(fileName string, cfg Conf, modelName string, origin string) {
+	tplContent := parseTpl("service.tpl", map[string]interface{}{"fileName": fileName, "module": cfg.Module, "modelName": modelName, "origin": origin})
 
-	mPath := cfg.GenPath + "/services/" + fileName + "Service.php"
-	writeFile(mPath, tplContent)
+	mPath := cfg.GenPath + "/services/"
+	if origin != "" {
+		mPath = cfg.GenPath + "/services/" + origin + "/"
+	}
+	mkAllDir(mPath)
+	writeFile(mPath+fileName+"Service.php", tplContent)
 }
 
 // paseModel 解析模型
-func paseModel(fileName string, cfg Conf, tplName string, tableName string) {
-	tplContent := parseTpl(tplName, map[string]interface{}{"fileName": fileName, "module": cfg.Module, "tableName": tableName})
+func paseModel(fileName string, cfg Conf, tplName string, tableName string, origin string) {
+	tplContent := parseTpl(tplName, map[string]interface{}{"fileName": fileName, "module": cfg.Module, "tableName": tableName, "origin": origin})
 
 	mPath := cfg.GenPath + "/models/" + fileName + ".php"
 	writeFile(mPath, tplContent)
@@ -173,4 +181,28 @@ func cameCase(str string) string {
 		}
 	}
 	return text
+}
+
+// mkAllDir 递归创建目录
+func mkAllDir(path string) {
+	res := IsDir(path)
+	if res {
+		return
+	}
+	err := os.MkdirAll(path, 0777)
+	if err != nil {
+		fmt.Printf("%s", err)
+	} else {
+		return
+	}
+
+}
+
+//IsDir 判断文件是否存在
+func IsDir(path string) bool {
+	s, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
+	return s.IsDir()
 }

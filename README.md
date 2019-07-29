@@ -14,7 +14,7 @@ TP-GEN 是一个生成TP框架下的 `CURD` 的工具,可以在项目目录下�
 
 # 配置说明
 ```
-path: 项目路径
+path: 项目路径,不配置则默认为当前目录
 application_name: app目录名称
 module: 默认生成在哪个模块下
 ```

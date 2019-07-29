@@ -1,7 +1,7 @@
 <?php
 namespace app\{{.module}}\controllers;
 
-use app\{{.module}}\services\{{.fileName}}Service as Service;
+use app\{{.module}}\services\{{- if ne .origin ""}}{{.origin}}\{{- end}}{{.fileName}}Service as Service;
 use app\{{.module}}\validates\{{.fileName}}Validate as Validate;
 use app\exceptions\BaseException;
 use app\enum\ErrorCodeEnum;

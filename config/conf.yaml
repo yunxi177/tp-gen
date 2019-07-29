@@ -1,3 +1,3 @@
-path: "./"
+# path: "./"
 application_name: "application"
 module: 'api'
