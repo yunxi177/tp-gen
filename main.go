@@ -111,20 +111,20 @@ func main() {
 }
 
 func parseValidate(fileName string, cfg Conf) {
-	tplContent := parseTpl("validate.tpl", map[string]interface{}{"fileName": fileName, "genCondition": cfg.CDATA, "module": cfg.Module})
+	tplContent := parseTpl("validate.tpl", map[string]interface{}{"fileName": fileName, "cfg": cfg})
 
 	mPath := cfg.GenPath + "/" + cfg.ValidateName + "/" + fileName + "Validate.php"
 	writeFile(mPath, tplContent)
 }
 func parseController(fileName string, cfg Conf, origin string) {
-	tplContent := parseTpl("controller.tpl", map[string]interface{}{"fileName": fileName, "genCondition": cfg.CDATA, "module": cfg.Module, "origin": origin})
+	tplContent := parseTpl("controller.tpl", map[string]interface{}{"fileName": fileName, "origin": origin, "cfg": cfg})
 
 	mPath := cfg.GenPath + "/" + cfg.ControllerName + "/" + fileName + ".php"
 	writeFile(mPath, tplContent)
 }
 
 func parseServices(fileName string, cfg Conf, modelName string, origin string) {
-	tplContent := parseTpl("service.tpl", map[string]interface{}{"fileName": fileName, "module": cfg.Module, "modelName": modelName, "origin": origin})
+	tplContent := parseTpl("service.tpl", map[string]interface{}{"fileName": fileName, "cfg": cfg, "modelName": modelName, "origin": origin})
 
 	mPath := cfg.GenPath + "/" + cfg.ServiceName + "/"
 	if origin != "" {
@@ -136,7 +136,7 @@ func parseServices(fileName string, cfg Conf, modelName string, origin string) {
 
 // paseModel 解析模型
 func paseModel(fileName string, cfg Conf, tplName string, tableName string, origin string) {
-	tplContent := parseTpl(tplName, map[string]interface{}{"fileName": fileName, "module": cfg.Module, "tableName": tableName, "origin": origin})
+	tplContent := parseTpl(tplName, map[string]interface{}{"fileName": fileName, "cfg": cfg, "tableName": tableName, "origin": origin})
 
 	mPath := cfg.GenPath + "/" + cfg.ModelName + "/" + fileName + ".php"
 	writeFile(mPath, tplContent)

@@ -1,9 +1,9 @@
 <?php
-namespace app\{{.module}}\services\{{- if ne .origin  ""}}{{.origin}}{{- end}};
+namespace app\{{.cfg.Module}}\{{.cfg.ServiceName}}{{- if ne .origin  ""}}\{{.origin}}{{- end}};
 {{- if ne .origin ""}}
-use app\api\services\BaseService;
+use app\api\{{.cfg.ServiceName}}\BaseService;
 {{- end}}
-use app\{{.module}}\models\{{.modelName}};
+use app\{{.cfg.Module}}\{{.cfg.ModelName}}\{{.modelName}};
 
 class {{.fileName}}Service extends BaseService
 {

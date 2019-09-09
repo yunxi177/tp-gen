@@ -1,5 +1,5 @@
 <?php
-namespace app\{{.module}}\validates;
+namespace app\{{.cfg.Module}}\{{.cfg.ValidateName}};
 
 class {{.fileName}}Validate extends BaseValidate
 {

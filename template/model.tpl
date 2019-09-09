@@ -1,5 +1,5 @@
 <?php
-namespace app\{{.module}}\models;
+namespace app\{{.cfg.Module}}\{{.cfg.ModelName}};
 
 class {{.fileName}} extends BaseModel
 {

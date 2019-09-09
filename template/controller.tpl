@@ -1,14 +1,14 @@
 <?php
-namespace app\{{.module}}\controllers;
+namespace app\{{.cfg.Module}}\{{.cfg.ControllerName}};
 
-use app\{{.module}}\services\{{- if ne .origin ""}}{{.origin}}\{{- end}}{{.fileName}}Service as Service;
-use app\{{.module}}\validates\{{.fileName}}Validate as Validate;
+use app\{{.cfg.Module}}\{{.cfg.ServiceName}}\{{- if ne .origin ""}}{{.origin}}\{{- end}}{{.fileName}}Service as Service;
+use app\{{.cfg.Module}}\{{.cfg.ValidateName}}\{{.fileName}}Validate as Validate;
 use app\exceptions\BaseException;
 use app\enum\ErrorCodeEnum;
 
 class {{.fileName}} extends BaseController
 {
-    {{if .genCondition.GenAdd }}
+    {{if .cfg.CDATA.GenAdd }}
     /**
      * 添加数据
      *
@@ -28,7 +28,7 @@ class {{.fileName}} extends BaseController
         return $this->okReturn([]);
     }
     {{end}}
-    {{- if .genCondition.GenDel }}
+    {{- if .cfg.CDATA.GenDel }}
     /**
      * 删除数据
      *
@@ -41,7 +41,7 @@ class {{.fileName}} extends BaseController
         (new Service)->del([['id', '=', $id]]);
         return $this->okReturn([]);
     }{{- end}}
-    {{- if .genCondition.GenUp }}
+    {{- if .cfg.CDATA.GenUp }}
     /**
      * 更新数据
      *
@@ -58,7 +58,7 @@ class {{.fileName}} extends BaseController
         (new Service)->update([['id', '=', $id]], $data);
         return $this->okReturn([]);
     }{{- end}}
-    {{- if .genCondition.GenList }}
+    {{- if .cfg.CDATA.GenList }}
     /**
      * 获取列表
      *
@@ -73,7 +73,7 @@ class {{.fileName}} extends BaseController
         return $this->okReturn($list, $service->getPageTotal());
     }{{- end}}
 
-    {{- if .genCondition.GenInfo }}
+    {{- if .cfg.CDATA.GenInfo }}
     /**
      * 获取信息
      *
