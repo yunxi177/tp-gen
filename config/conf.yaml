@@ -1,3 +1,7 @@
 # path: "./"
 application_name: "application"
 module: 'api'
+model_name: 'models'
+controller_name: 'controllers'
+service_name: 'services'
+validate_name: 'validates'

@@ -14,11 +14,15 @@ import (
 
 //Conf 配置
 type Conf struct {
-	Path    string `yaml:"path"`
-	AppName string `yaml:"application_name"`
-	Module  string `yaml:"module"`
-	GenPath string
-	CDATA   CCond
+	Path           string `yaml:"path"`
+	AppName        string `yaml:"application_name"`
+	Module         string `yaml:"module"`
+	ModelName      string `yaml:"model_name"`
+	ControllerName string `yaml:"controller_name"`
+	ServiceName    string `yaml:"service_name"`
+	ValidateName   string `yaml:"validate_name"`
+	GenPath        string
+	CDATA          CCond
 }
 
 // CCond Controller 生成条件
@@ -109,22 +113,22 @@ func main() {
 func parseValidate(fileName string, cfg Conf) {
 	tplContent := parseTpl("validate.tpl", map[string]interface{}{"fileName": fileName, "genCondition": cfg.CDATA, "module": cfg.Module})
 
-	mPath := cfg.GenPath + "/validates/" + fileName + "Validate.php"
+	mPath := cfg.GenPath + "/" + cfg.ValidateName + "/" + fileName + "Validate.php"
 	writeFile(mPath, tplContent)
 }
 func parseController(fileName string, cfg Conf, origin string) {
 	tplContent := parseTpl("controller.tpl", map[string]interface{}{"fileName": fileName, "genCondition": cfg.CDATA, "module": cfg.Module, "origin": origin})
 
-	mPath := cfg.GenPath + "/controllers/" + fileName + ".php"
+	mPath := cfg.GenPath + "/" + cfg.ControllerName + "/" + fileName + ".php"
 	writeFile(mPath, tplContent)
 }
 
 func parseServices(fileName string, cfg Conf, modelName string, origin string) {
 	tplContent := parseTpl("service.tpl", map[string]interface{}{"fileName": fileName, "module": cfg.Module, "modelName": modelName, "origin": origin})
 
-	mPath := cfg.GenPath + "/services/"
+	mPath := cfg.GenPath + "/" + cfg.ServiceName + "/"
 	if origin != "" {
-		mPath = cfg.GenPath + "/services/" + origin + "/"
+		mPath = cfg.GenPath + "/" + cfg.ServiceName + "/" + origin + "/"
 	}
 	mkAllDir(mPath)
 	writeFile(mPath+fileName+"Service.php", tplContent)
@@ -134,7 +138,7 @@ func parseServices(fileName string, cfg Conf, modelName string, origin string) {
 func paseModel(fileName string, cfg Conf, tplName string, tableName string, origin string) {
 	tplContent := parseTpl(tplName, map[string]interface{}{"fileName": fileName, "module": cfg.Module, "tableName": tableName, "origin": origin})
 
-	mPath := cfg.GenPath + "/models/" + fileName + ".php"
+	mPath := cfg.GenPath + "/" + cfg.ModelName + "/" + fileName + ".php"
 	writeFile(mPath, tplContent)
 }
 
