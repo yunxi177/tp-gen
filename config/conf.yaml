@@ -1,7 +1,7 @@
-# path: "./"
-application_name: "application"
-module: 'api'
-model_name: 'models'
-controller_name: 'controllers'
-service_name: 'services'
-validate_name: 'validates'
+path: "/home/yunxi/workspace/project/backend/brand"
+application_name: "app"
+module: 'admin'
+model_name: 'model'
+controller_name: 'controller'
+service_name: 'service'
+validate_name: 'validate'

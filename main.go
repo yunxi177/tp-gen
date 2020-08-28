@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strings"
 	"text/template"
 
@@ -36,6 +37,7 @@ type CCond struct {
 
 // 项目路径
 var path string
+var execPath string
 
 func main() {
 	conf := Conf{}
@@ -67,7 +69,15 @@ func main() {
 		return
 	}
 	// 获取配置文件信息
-	data, err := ioutil.ReadFile("./config/conf.yaml")
+	ex, err := os.Executable()
+	if err != nil {
+		panic(err)
+	}
+	execPath = filepath.Dir(ex)
+	fmt.Println(execPath)
+
+	data, err := ioutil.ReadFile(execPath + "/config/conf.yaml")
+	fmt.Println(execPath + "/config/conf.yaml")
 	if err != nil {
 		fmt.Println("获取配置文件失败")
 		return
@@ -157,7 +167,7 @@ func writeFile(path string, content []byte) {
 func parseTpl(tplName string, data map[string]interface{}) []byte {
 	newbytes := bytes.NewBufferString("")
 
-	t := template.Must(template.ParseFiles("./template/" + tplName))
+	t := template.Must(template.ParseFiles(execPath + "/template/" + tplName))
 	t.Execute(newbytes, data)
 	tplContent, err := ioutil.ReadAll(newbytes)
 	if err != nil {
